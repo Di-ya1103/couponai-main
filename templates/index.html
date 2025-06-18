@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .chat-container {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .message {
+            margin: 15px 0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 85%;
+        }
+        .user-message {
+            background-color: #007bff;
+            color: #fff;
+            margin-left: auto;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #e9ecef;
+            color: #333;
+            margin-right: auto;
+            text-align: left;
+        }
+        .history-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .history-container h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .history-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .history-container li {
+            padding: 5px 0;
+            color: #555;
+        }
+        form {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .search-btn {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .clear-btn {
+            background-color: #ffc107;
+            color: #333;
+        }
+        .quit-btn {
+            background-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛍️ Coupon Chatbot</h1>
+    <div class="history-container">
+        <h3>📜 Recent Queries</h3>
+        {% if queries %}
+            <ul>
+                {% for query in queries|reverse %}
+                    <li>{{ query }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No queries yet. Start searching! 🔍</p>
+        {% endif %}
+    </div>
+    <div class="chat-container" id="chatContainer">
+        {% for message in messages|reverse %}
+            <div class="message {{ 'user-message' if message.type == 'user' else 'bot-message' }}">
+                <strong>{{ 'You' if message.type == 'user' else 'Bot' }}:</strong> {{ message.content|safe }}
+            </div>
+        {% endfor %}
+    </div>
+    <form method="POST" action="/">
+        <input type="text" name="query" placeholder="E.g., coupons for hong kong" autocomplete="off">
+        <button type="submit" class="search-btn">Search</button>
+        <button type="submit" name="action" value="clear" class="clear-btn">Clear</button>
+        <button type="submit" name="action" value="quit" class="quit-btn">Quit</button>
+    </form>
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.scrollTop = 0;
+    </script>
+</body>
+</html>
